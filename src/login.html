@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../style/css/login.css" rel="stylesheet">
+    <title>Acesse sua conta</title>
+    <script src="functions.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="homePage.html" class="logo">
+          <img src="logo.png" alt="siteLogo" width="100">
+        </a>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Acesse sua conta</h1>
+
+      <div class="page-form">
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" required>
+          </div>
+
+          <div class="form-group">
+            <button type="submit">Entrar</button>
+          </div>
+        </form>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            var form = document.getElementById("login-form");
+
+            form.addEventListener("submit", function(event) {
+              event.preventDefault();
+
+              var email = document.getElementById("email").value;
+              var password = document.getElementById("password").value;
+
+              var formData = {
+                email: email,
+                password: password
+              };
+
+              fetch(backendUrl + "/login", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+              })
+              .then(response => {
+                if (response.ok) {
+                  return response.json();
+                }
+                else {
+                  var unauthorizedMessage = document.getElementById("unauthorizedMessage");
+                  unauthorizedMessage.textContent = "Credenciais inválidas";
+                }
+              })
+              .then(data => {
+                localStorage.setItem("jwtToken", data.accessToken);  
+
+                window.location.href = "getUser.html";
+              })
+              .catch(error => {
+                console.error("Erro na requisição:", error);
+              });
+            });
+          });
+        </script>
+      </div>
+
+      <p id="unauthorizedMessage"></p>
+      <p>Ainda não tem uma conta? <a href="registerUser.html">Cadastre-se</a></p>
+      <p>Esqueceu a senha? <a href="passwordRecovery.html">Recupere sua senha</a></p>
+    </div>
+  </body>
+</html>

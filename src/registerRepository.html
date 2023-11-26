@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../style/css/registerRepository.css" rel="stylesheet">
+    <title>Crie um novo repositório</title>
+    <script src="functions.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="homePage.html" class="logo">
+          <img src="logo.png" alt="siteLogo" width="100">
+        </a>
+      </div>
+
+      <div>
+        <a href="repository.html" class="btn">Repositórios</a>
+        <a href="getUser.html" class="btn">Minha Conta</a>
+      </div>
+    </header>
+
+    <div class="container">
+      <h2>Inicie um novo repositório</h2>
+
+      <div class="page-form">
+        <form id="register-form">
+          <div class="form-group">
+            <label for="name">Nome</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Descrição</label>
+            <input type="text" id="description" name="description">
+          </div>
+
+          <div class="radio-group">
+            <input type="radio" id="public" name="type" value="public" required>
+            <label for="public">Público</label>
+
+            <input type="radio" id="private" name="type" value="private">
+            <label for="private">Privado</label>
+          </div>
+
+          <div class="form-group">
+            <button type="submit">Cadastrar</button>
+          </div>
+        </form>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            var form = document.getElementById("register-form");
+
+            form.addEventListener("submit", function(event) {
+              event.preventDefault();
+
+              var jwtToken = getJwtToken();
+              
+              var repositoryName = document.getElementById("name").value;
+              var repositoryDescription = document.getElementById("description").value;
+              var repositoryType = document.getElementById("private").checked ? 0 : 1;
+
+              var formData = {
+                name: repositoryName,
+                description: repositoryDescription,
+                type: repositoryType
+              };
+
+              fetch(backendUrl + "/repository", {
+                method: 'POST',
+                headers: {
+                  'Authorization': 'Bearer ' + jwtToken,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+              })
+              .then(response => {
+                if (response.status === 401) {
+                  window.location.href = "login.html";
+                }
+                return response.json();
+              })
+              .then(data => {
+                window.location.href = "getRepository.html?id=" + data.id;
+              })
+              .catch(error => {
+                console.error("Erro na requisição:", error);
+              });
+            });
+          });
+        </script>
+      </div>
+    </div>
+  </body>
+</html>

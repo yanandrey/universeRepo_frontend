@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../style/css/updateContent.css" rel="stylesheet">
+    <title>Editar Conteúdo</title>
+    <script src="functions.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="homePage.html" class="logo">
+          <img src="logo.png" alt="siteLogo" width="100">
+        </a>
+      </div>
+
+      <div>
+        <a href="repository.html" class="btn">Repositórios</a>
+        <a href="getUser.html" class="btn">Minha Conta</a>
+      </div>
+    </header>
+
+    <div class="btn-container">
+      <h2>Editar contéudo</h2>
+
+      <ul id="list"></ul>
+
+      <button class="btn btn-add" onclick="addItem()">Adicionar</button>    
+      <button class="btn btn-edit" onclick="saveList()">Salvar</button>
+
+      <script>
+        var itemsList = [];
+
+        function fetchAndRenderData() {
+          var jwtToken = getJwtToken();
+          var repositoryId = getUrlParam("id");
+
+          fetch(backendUrl + "/repository/" + repositoryId, {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + jwtToken,
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => {
+            if (response.status === 401) {
+              window.location.href = "login.html";
+            }
+            return response.json();
+          })
+          .then(data => {
+            var list = document.getElementById("list");
+            list.innerHTML = "";
+
+            data.contents.forEach(function(item) {
+              var listItem = document.createElement("li");
+              listItem.innerHTML = `
+                <input type="text" placeholder="Title" value="${item.title}">
+                <input type="text" placeholder="Value" value="${item.value}">
+                <button class="btn btn-remove" onclick="removeItem(this)">Remover</button>
+              `;
+
+              list.appendChild(listItem);
+            });
+          })
+          .catch(error => {
+            console.error("Erro na requisição:", error);
+          });
+        }
+
+        function addItem() {
+          var list = document.getElementById("list");
+
+          var newItem = document.createElement("li");
+          newItem.innerHTML = `
+              <input type="text" placeholder="Title">
+              <input type="text" placeholder="Value">
+              <button class="btn btn-remove" onclick="removeItem(this)">Remover</button>
+          `;
+
+          list.appendChild(newItem);
+        }
+
+        function removeItem(removeButton) {
+          var list = document.getElementById("list");
+          var item = removeButton.parentNode;
+          list.removeChild(item);
+        }
+
+        function saveList() {
+          var jwtToken = getJwtToken();
+          var userId = getUrlParam("id");
+          
+          var list = document.getElementById("list");
+          var items = list.getElementsByTagName("li");
+
+          itemsList = [];
+
+          for (var i = 0; i < items.length; i++) {
+              var inputTitle = items[i].querySelector('input[type="text"][placeholder="Title"]');
+              var inputValue = items[i].querySelector('input[type="text"][placeholder="Value"]');
+
+              itemsList.push({
+                title: inputTitle.value,
+                value: inputValue.value
+              });
+          }
+
+          var contentData = {
+            id: userId,
+            contents: itemsList
+          };
+
+          fetch(backendUrl + "/repository/content", {
+            method: 'PUT',
+            headers: {
+              'Authorization': 'Bearer ' + jwtToken,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contentData)
+          })
+          .then(response => {
+            if (response.status === 401) {
+              window.location.href = "login.html";
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log(data);
+            window.location.href = "getRepository.html?id=" + userId;
+          })
+          .catch(error => {
+            console.error("Erro na requisição:", error);
+          });
+        }
+
+        fetchAndRenderData();
+      </script>
+    </div>
+  </body>
+</html>

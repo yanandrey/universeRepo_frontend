@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../style/css/repository.css" rel="stylesheet">
+    <title>Repositórios</title>
+    <script src="functions.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="homePage.html" class="logo">
+          <img src="logo.png" alt="siteLogo" width="100">
+        </a>
+      </div>
+
+      <div>
+        <a href="repository.html" class="btn">Repositórios</a>
+        <a href="getUser.html" class="btn">Minha Conta</a>
+      </div>
+    </header>
+
+    <div class="content-box">
+      <h2>Repositórios encontrados:</h2>
+      <ul id="repositoryList"> </ul>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          var jwtToken = getJwtToken();
+
+          var repositoryName = getUrlParam("name");
+          var repositoryList = document.getElementById("repositoryList");
+
+          var endpointUrl = backendUrl + "/repository/" + repositoryName;
+
+          fetch(endpointUrl, {
+            method: 'GET',
+            headers: {
+                  'Authorization': 'Bearer ' + jwtToken,
+                  'Content-Type': 'application/json'
+          }})
+          .then(response => {
+            if (response.status === 401) {
+              window.location.href = "login.html";
+            }
+            return response.json();
+          })
+          .then(data => {
+            data.forEach(function(item) {
+              var listItem = document.createElement("li");
+
+              var link = document.createElement("a");
+              link.href = "getRepository.html?id=" + item.id;
+              link.textContent = item.name;
+
+              listItem.appendChild(link);
+              repositoryList.appendChild(listItem);
+            });
+
+            if (data.length < 1) {
+              var listItem = document.createElement("li");
+
+              var response = document.createElement("a");
+              response.textContent = "Nenhum repositório com esse nome foi encontrado.";
+
+              listItem.appendChild(response);
+              repositoryList.appendChild(listItem);
+            }
+          })
+          .catch(error => {
+            console.error("Erro na requisição:", error);
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>

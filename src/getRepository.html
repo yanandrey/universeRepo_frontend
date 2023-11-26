@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../style/css/getRepository.css" rel="stylesheet">
+    <title>Back-end com .NET</title>
+    <script src="functions.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="homePage.html" class="logo">
+          <img src="logo.png" alt="siteLogo" width="100">
+        </a>
+      </div>
+
+      <div>
+        <a href="repository.html" class="btn">Repositórios</a>
+        <a href="getUser.html" class="btn">Minha Conta</a>
+      </div>
+    </header>
+
+    <div class="content-box">
+      <h2 id="repositoryName"> </h2>
+      <h4 id="repositoryDescription"> </h4>
+      <ul id="repositoryList"> </ul>
+      
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          var jwtToken = getJwtToken();
+
+          var repositoryId = getUrlParam("id");
+          var repositoryName = document.getElementById("repositoryName");
+          var repositoryDescription = document.getElementById("repositoryDescription");
+          var repositoryList = document.getElementById("repositoryList");
+          var repositoryCreation = document.getElementById("repositoryCreation");
+
+          var endpointUrl = backendUrl + "/repository/" + repositoryId;
+
+          fetch(endpointUrl, {
+              method: 'GET',
+              headers: {
+                  'Authorization': 'Bearer ' + jwtToken,
+                  'Content-Type': 'application/json'
+          }})
+          .then(response => {
+            if (response.status === 401) {
+              window.location.href = "login.html";
+            }
+            return response.json();
+          })
+          .then(data => {
+            repositoryName.textContent = data.name;
+            repositoryDescription.textContent = data.description;
+            repositoryCreation.textContent = "Data de criação: " + data.createdAt.substring(0, 10);
+
+            data.contents.forEach(function(item) {
+              var listItem = document.createElement("li");
+
+              var link = document.createElement("a");
+              link.href = item.value;
+              link.textContent = item.title;
+
+              listItem.appendChild(link);
+              repositoryList.appendChild(listItem);
+            });
+            })
+          .catch(error => {
+            console.error("Erro na requisição:", error);
+          });
+        });
+      </script>
+    </div>
+    
+    <div class="btn-container">
+      <h4 id="repositoryCreation"> </h4>
+
+      <button id="editButton" class="btn btn-edit">Editar Repositório</button>
+      <button id="contentButton" class="btn btn-add">Editar Conteúdo</button>
+      <button id="removeButton" class="btn btn-remove">Excluir Repositório</button>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          var jwtToken = getJwtToken();
+
+          var repositoryId = getUrlParam("id");
+          var editButton = document.getElementById("editButton");
+          var contentButton = document.getElementById("contentButton");
+          var removeButton = document.getElementById("removeButton");
+
+          editButton.addEventListener("click", function() {
+            window.location.href = "updateRepository.html?id=" + repositoryId;
+          });
+
+          contentButton.addEventListener("click", function() {
+            window.location.href = "updateContent.html?id=" + repositoryId;
+          });
+
+          removeButton.addEventListener("click", function() {
+            var endpointUrl = backendUrl + "/repository/" + repositoryId;
+
+            fetch(endpointUrl, {
+              method: 'DELETE',
+              headers: {
+                  'Authorization': 'Bearer ' + jwtToken,
+                  'Content-Type': 'application/json'
+            }})
+            .then(response => {
+              if (response.status === 401) {
+                window.location.href = "login.html";
+              }
+            })
+            .then(data => {
+              window.location.href = "repository.html";
+            })
+            .catch(error => {
+              console.error("Erro na requisição:", error);
+            });
+          });
+        });
+    </script>
+    </div>
+  </body>
+</html>

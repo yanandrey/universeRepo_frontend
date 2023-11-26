@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../style/css/getUser.css" rel="stylesheet">
+    <title>Minha conta</title>
+    <script src="functions.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="homePage.html" class="logo">
+          <img src="logo.png" alt="siteLogo" width="100">
+        </a>
+      </div>
+
+      <div>
+        <a href="repository.html" class="btn">Repositórios</a>
+        <a href="getUser.html" class="btn">Minha Conta</a>
+      </div>
+    </header>
+    <div class="container">
+      <table class="user-info">
+        <tr>
+          <th>Nome:</th>
+          <td id="userName"> </td>
+        </tr>
+
+        <tr>
+          <th>Email:</th>
+          <td id="userEmail"> </td>
+        </tr>
+
+        <tr>
+          <th>Telefone:</th>
+          <td id="userPhone"> </td>
+        </tr>
+
+        <tr>
+          <th>Data de nascimento:</th>
+          <td id="userBirthDate"> </td>
+        </tr>
+
+        <tr>
+          <th>Gênero:</th>
+          <td id="userGender"> </td>
+        </tr>
+
+        <tr>
+          <th>Membro desde:</th>
+          <td id="memberSince"> </td>
+        </tr>
+      </table>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var jwtToken = getJwtToken();
+            var userTable = document.querySelector("#user-table tbody");
+
+            fetch(backendUrl + "/user", {
+                method: 'GET',
+                headers: {
+                  'Authorization': 'Bearer ' + jwtToken,
+                  'Content-Type': 'application/json'
+              }})
+              .then(response => {
+                if (response.status === 401) {
+                  window.location.href = "login.html";
+                }
+                return response.json();
+              })
+              .then(data => {
+                var userName = document.getElementById("userName");
+                userName.textContent = data.name;
+
+                var userEmail = document.getElementById("userEmail");
+                userEmail.textContent = data.email;
+
+                var userPhone = document.getElementById("userPhone");
+                userPhone.textContent = data.phone;
+
+                var userBirthDate = document.getElementById("userBirthDate");
+                userBirthDate.textContent = formatDate(data.birthDate.substring(0, 10));
+
+                var userGender = document.getElementById("userGender");
+                userGender.textContent = convertGenderEnumToText(data.gender);
+                
+                var memberSince = document.getElementById("memberSince");
+                memberSince.textContent = formatDate(data.memberSince.substring(0, 10));
+              })
+              .then(response => console.log(response))
+              .catch(error => {
+                console.error("Erro na requisição:", error);
+              });
+        });
+      </script>
+    </div>
+    
+    <div class="btn-container">
+      <button id="editButton" class="btn btn-edit">Editar Dados</button>
+      <button id="removeButton" class="btn btn-remove">Excluir Conta</button>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          var editButton = document.getElementById("editButton");
+          var contentButton = document.getElementById("contentButton");
+          var removeButton = document.getElementById("removeButton");
+
+          editButton.addEventListener("click", function() {
+            var jwtToken = getJwtToken();
+
+            fetch( backendUrl + "/user", {
+              method: 'GET',
+              headers: {
+                  'Authorization': 'Bearer ' + jwtToken,
+                  'Content-Type': 'application/json'
+            }})
+            .then(response => {
+              if (response.status === 401) {
+                window.location.href = "login.html";
+              }
+              return response.json();
+            })
+            .then(data => {
+              window.location.href = "updateUser.html?id=" + data.id;
+            })
+            .catch(error => {
+              console.error("Erro na requisição:", error);
+            });
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>
