@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../style/css/getRepository.css" rel="stylesheet">
-    <title>Back-end com .NET</title>
+    <title>Carregando...</title>
     <script src="functions.js"></script>
   </head>
   <body>
@@ -22,8 +22,8 @@
     </header>
 
     <div class="content-box">
-      <h2 id="repositoryName"> </h2>
-      <h4 id="repositoryDescription"> </h4>
+      <h2 id="repositoryName">Carregando...</h2>
+      <h4 id="repositoryDescription">Carregando...</h4>
       <ul id="repositoryList"> </ul>
       
       <script>
@@ -51,6 +51,7 @@
             return response.json();
           })
           .then(data => {
+            document.title = data.name;
             repositoryName.textContent = data.name;
             repositoryDescription.textContent = data.description;
             repositoryCreation.textContent = "Data de criação: " + data.createdAt.substring(0, 10);
@@ -74,7 +75,7 @@
     </div>
     
     <div class="btn-container">
-      <h4 id="repositoryCreation"> </h4>
+      <h4 id="repositoryCreation">Carregando...</h4>
 
       <button id="editButton" class="btn btn-edit">Editar Repositório</button>
       <button id="contentButton" class="btn btn-add">Editar Conteúdo</button>
