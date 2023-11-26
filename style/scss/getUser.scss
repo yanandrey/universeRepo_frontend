@@ -1,0 +1,29 @@
+@import 'basicStyle';
+
+h1 {
+	margin: 0;
+}
+.container {
+	max-width: 800px;
+	margin: 20px auto;
+	padding: 20px;
+	background-color: $background-color_3;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+}
+table {
+	width: 100%;
+	th {
+		padding: 10px;
+		text-align: left;
+	}
+	td {
+		padding: 10px;
+		text-align: right;
+	}
+}
+a {
+	text-decoration: none;
+	color: $color_2;
+}

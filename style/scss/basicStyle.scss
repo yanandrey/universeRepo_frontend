@@ -1,0 +1,98 @@
+$color_1: #fff;
+$color_2: #333;
+$color_3: #555;
+$background-color_1: #333;
+$background-color_2: #555;
+$background-color_3: #f0f0f0;
+$background-color_4: #f00;
+$font-family_1: Arial, sans-serif;
+
+header {
+	background-color: $background-color_1;
+	color: $color_1;
+	text-align: center;
+	padding: 10px 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.logo {
+	margin-left: 20px;
+}
+body {
+	text-align: center;
+	font-family: $font-family_1;
+	margin: 0;
+	padding: 0;
+	background-color: $background-color_3;
+}
+.container {
+	padding: 20px;
+}
+.page-form {
+	margin: 0 auto;
+	max-width: 300px;
+}
+.form-group {
+	margin-bottom: 20px;
+	label {
+		display: block;
+		text-align: center;
+	}
+	input {
+		text-align: center;
+		width: 100%;
+		padding: 10px;
+		font-size: 16px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+	}
+	select {
+		width: 107%;
+		padding: 10px;
+		font-size: 16px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+	}
+	option {
+		text-align: center;
+	}
+	button {
+		width: 107%;
+		padding: 10px;
+		background-color: $background-color_1;
+		color: $color_1;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+}
+.btn-container {
+	text-align: center;
+	margin-top: 20px;
+}
+.btn {
+	color: $color_1;
+	background-color: $background-color_1;
+	display: inline-block;
+	padding: 10px 20px;
+	margin: 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	&:hover {
+		background-color: $background-color_1;
+	}
+}
+.btn-add {
+	background-color: $background-color_1;
+	color: $color_1;
+}
+.btn-edit {
+	background-color: $background-color_2;
+	color: $color_1;
+}
+.btn-remove {
+	background-color: $background-color_4;
+	color: $color_1;
+}

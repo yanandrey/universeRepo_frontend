@@ -1,0 +1,29 @@
+@import 'basicStyle';
+
+body {
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+}
+.content-box {
+	max-width: 400px;
+	margin: 0 auto;
+	background-color: $background-color_3;
+	padding: 20px;
+	border-radius: 5px;
+}
+h2 {
+	text-align: center;
+	color: $color_2;
+}
+ul {
+	list-style-type: none;
+	padding: 0;
+}
+li {
+	margin-bottom: 10px;
+}
+a {
+	text-decoration: none;
+	color: $color_2;
+}

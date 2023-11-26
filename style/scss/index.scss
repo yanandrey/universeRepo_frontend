@@ -1,0 +1,30 @@
+@import 'basicStyle';
+
+.container {
+	text-align: center;
+	border-radius: 5px;
+}
+table {
+	border-collapse: collapse;
+	width: 30%;
+	margin: 20px auto;
+}
+th {
+	border: 2px solid #ddd;
+	padding: 8px;
+	text-align: center;
+	background-color: $background-color_3;
+}
+td {
+	border: 2px solid #ddd;
+	padding: 8px;
+	text-align: center;
+}
+.documentation {
+	font-size: 16px;
+	margin-top: 40px;
+	a {
+		color: $color_2;
+		text-decoration: underline;
+	}
+}
