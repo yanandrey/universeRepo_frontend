@@ -104,10 +104,9 @@
               })
               .then(response => {                
                 if (response.ok) {
+                  window.location.href = "login.html";
                   return response.json();
                 }
-
-                window.location.href = "login.html";
               })
               .catch(error => {
                 console.error("Erro na requisição:", error);
